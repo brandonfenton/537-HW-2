@@ -28,6 +28,7 @@ models
 summary(get.models(models,1)[[1]])
 
 ```
+The F-test in the model summary is comparing the full model to the null model.  In this case the associated p-value is extremely small, implying that the full model is superior.  Similarly, the delta-AIC between the full model and the null model is 208.88; this difference is more than 100 times greater in magnitude than the difference of 2 which is generally considered to be large.
 
 4. _Now we will switch to using cross-validation for these same sorts of comparisons. Read JWHT page 175 to 181. Write R code to calculate the LOOCV error for a model with a common mean for all observations (so the model is lm(y~1,data=?)). Do not use any functions that directly calculate the LOOCV (see below). Report the R code and your estimate of CV$_{(n)}$ for this model._ 
 ```{r p4_a, echo=F, comment="", message=F, warning=F}
@@ -82,6 +83,7 @@ LOOfolds <- cvFolds(n=n, K=n, R=1)
 cvLm(full.lm, cost=mspe, folds=LOOfolds)
 ```
 The elements in the 5 folds are selected randomly, and so will be different with different seed values.  With LOOCV each observation is used once as a test set for a model fit with all of the remaining observations.  So regardless of order the set of training/test sets used will be identical, making the results the same no matter what value has been used to seed the pseudo-random number generator.
+
 ## R Code Appendix:
 
 ```{r a1, ref.label='p1_a', eval=F}
