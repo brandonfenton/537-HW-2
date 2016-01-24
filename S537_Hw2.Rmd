@@ -1,0 +1,29 @@
+---
+title: "Stat 537: Homework 2"
+author: "Doug Anderson and Brandon Fenton"
+date: "Due Wednesday, Jan 27 at end of day"
+output: html_document
+---
+
+1. _Use the dredge function from the R package MuMIn on your "full" model (say something like fm1) to generate AICs for all possible models._
+
+```{r p1_a, echo=F, comment="", message=F, warning=F}
+require(Rlab)
+data(golf)
+require(MuMIn)
+options(na.action = "na.fail")
+
+full.lm <- lm(score ~ distance + accur + putts, data = golf)
+dredge(full.lm, rank=AIC)
+```
+
+2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of moe than 2 units are considered to be "large" and strong support for a model that is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
+
+3. _Also compare support for the model with no predictors to your top model (if it isn't your top model) on AICs. In the model summary() for your top model, here is a result that parallels this comparison. Report that result and discuss whether they lead you to the same suggestions about these two models._
+
+4. _Now q_
+
+## R Code Appendix:
+
+```{r a1, ref.label='p1_a', eval=F}
+```
