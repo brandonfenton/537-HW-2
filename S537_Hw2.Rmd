@@ -15,12 +15,19 @@ options(na.action = "na.fail")
 
 full.lm <- lm(score ~ distance + accur + putts, data = golf)
 models <- dredge(full.lm, rank=AIC)
-summary(get.models(models,1)[[1]])
+models
+
 ```
 
 2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of moe than 2 units are considered to be "large" and strong support for a model that is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
 
 3. _Also compare support for the model with no predictors to your top model (if it isn't your top model) on AICs. In the model summary() for your top model, here is a result that parallels this comparison. Report that result and discuss whether they lead you to the same suggestions about these two models._
+
+```{r p3_a, echo=F, comment="", message=F, warning=F}
+
+summary(get.models(models,1)[[1]])
+
+```
 
 4. _Now we will switch to using cross-validation for these same sorts of comparisons. Read JWHT page 175 to 181. Write R code to calculate the LOOCV error for a model with a common mean for all observations (so the model is lm(y~1,data=?)). Do not use any functions that directly calculate the LOOCV (see below). Report the R code and your estimate of CV$_{(n)}$ for this model._ 
 
