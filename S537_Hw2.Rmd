@@ -30,12 +30,18 @@ summary(get.models(models,1)[[1]])
 ```
 
 4. _Now we will switch to using cross-validation for these same sorts of comparisons. Read JWHT page 175 to 181. Write R code to calculate the LOOCV error for a model with a common mean for all observations (so the model is lm(y~1,data=?)). Do not use any functions that directly calculate the LOOCV (see below). Report the R code and your estimate of CV$_{(n)}$ for this model._ 
+```{r p4_a, echo=F, comment="", message=F, warning=F}
+n <- dim(golf)[1]
+CVn <- mean((golf$score-mean(golf$score))^2)
+
+
+```
 
 5. _Based on JWHT result 5.2, you can also use the diagonal from the hat matrix to do LOOCV or you can mimic what you might have done in the previous questions that invlovled deleting each observation and producing the required fitted value. The $h_{ii}$'s are available in R using influence(fm1)$hat. Now write and report your own code to find the LOOCV for your top ranked, second ranked, and worst ranked models from the AIC model selection. Discuss these comparisons (note: these are on the squared units of your response variable and there are no rules of thumb for differences). Also note wheher they generally agree with the AIC results or not._
 
 ```{r p5_a, echo=F, comment="", message=F, warning=F}
 require(cvTools)
-n <- dim(golf)[1]
+
 LOOfolds <- cvFolds(n=n, K=n, R=1)
 cvLm(full.lm, cost=mspe, folds=LOOfolds)
 ```
