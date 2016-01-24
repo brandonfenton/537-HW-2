@@ -14,7 +14,8 @@ require(MuMIn)
 options(na.action = "na.fail")
 
 full.lm <- lm(score ~ distance + accur + putts, data = golf)
-dredge(full.lm, rank=AIC)
+models <- dredge(full.lm, rank=AIC)
+summary(get.models(models,1)[[1]])
 ```
 
 2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of moe than 2 units are considered to be "large" and strong support for a model that is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
