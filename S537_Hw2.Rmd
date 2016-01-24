@@ -47,30 +47,37 @@ mean.CVn_j <- mean(CVn_j) #0.6813177
 
 Using the above code, it was estimated that the LOOCV error for a model with a common mean for all observations is $\widehat{\text{CV}}_{(n)} =$ `r mean.CVn_j`. 
 
-5. _Based on JWHT result 5.2, you can also use the diagonal from the hat matrix to do LOOCV or you can mimic what you might have done in the previous questions that invlovled deleting each observation and producing the required fitted value. The $h_{ii}$'s are available in R using influence(fm1)$hat. Now write and report your own code to find the LOOCV for your top ranked, second ranked, and worst ranked models from the AIC model selection. Discuss these comparisons (note: these are on the squared units of your response variable and there are no rules of thumb for differences). Also note wheher they generally agree with the AIC results or not._
+5. _Based on JWHT result 5.2, you can also use the diagonal from the hat matrix to do LOOCV or you can mimic what you might have done in the previous questions that involved deleting each observation and producing the required fitted value. The $h_{ii}$'s are available in R using influence(fm1)$hat. Now write and report your own code to find the LOOCV for your top ranked, second ranked, and worst ranked models from the AIC model selection. Discuss these comparisons (note: these are on the squared units of your response variable and there are no rules of thumb for differences). Also note wheher they generally agree with the AIC results or not._
 
 ```{r p5_a, echo=T, comment="", message=F, warning=F}
 require(cvTools)
 second.lm <- get.models(models,2)[[1]]
 null.lm <- get.models(models,8)[[1]]
 
+# get the diagonals from the hat matrix for each model
 hii.full <- influence(full.lm)$hat
 hii.second <- influence(second.lm)$hat
 hii.null <- influence(null.lm)$hat
 
+# estimate LOOCV for each model
 CVN_j.full <- ((golf$score-predict(full.lm))/(1-hii.full))^2
 CVN_j.second <- ((golf$score-predict(second.lm))/(1-hii.second))^2
 CVN_j.null <- ((golf$score-mean(golf$score))/(1-hii.null))^2
 
-mean(CVN_j.full)
-mean(CVN_j.second)
-mean(CVN_j.null)
+LOOCV.full <- mean(CVN_j.full)
+LOOCV.second <- mean(CVN_j.second)
+LOOCV.null <- mean(CVN_j.null)
 
 # Check
 LOOfolds <- cvFolds(n=n, K=n, R=1)
-cvLm(full.lm, cost=mspe, folds=LOOfolds)
-cvLm(second.lm, cost=mspe, folds=LOOfolds)
-cvLm(null.lm, cost=mspe, folds=LOOfolds)
+check.L.full <- cvLm(full.lm, cost=mspe, folds=LOOfolds)
+check.L.second <- cvLm(second.lm, cost=mspe, folds=LOOfolds)
+check.L.null <- cvLm(null.lm, cost=mspe, folds=LOOfolds)
+```
+
+```{r p5_b, echo=F, comment="", message=F, warning=F}
+LOOCV.sum.df <- data.frame("Est_LOOCV" = c(LOOCV.full, LOOCV.second, LOOCV.null), row.names=c("Top Ranked (Full)", "Second Ranked", "Workst Ranked (Null)"))
+pander(LOOCV.sum.df)
 ```
 
 6. _Read JWHT 5.1.3. Now we can consider k-fold cross-validation for these same comparisons. Use 5-fold cross-validation to estimate the mean-squared prediction error for your top model. Modify the cvFolds object to get 5-fold CV. Compare this result to the estimate from LOOCV._
