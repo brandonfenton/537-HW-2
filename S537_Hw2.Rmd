@@ -76,7 +76,7 @@ check.L.null <- cvLm(null.lm, cost=mspe, folds=LOOfolds)
 ```
 
 ```{r p5_b, echo=F, comment="", message=F, warning=F}
-LOOCV.sum.df <- data.frame("Est_LOOCV" = c(LOOCV.full, LOOCV.second, LOOCV.null), row.names=c("Top Ranked (Full)", "Second Ranked", "Workst Ranked (Null)"))
+LOOCV.sum.df <- data.frame("Est_LOOCV" = c(LOOCV.full, LOOCV.second, LOOCV.null), "cvLM_LOOCV" = c(check.L.full$cv, check.L.second$cv, check.L.null$cv), row.names=c("Top Ranked (Full)", "Second Ranked", "Workst Ranked (Null)"))
 pander(LOOCV.sum.df)
 ```
 
