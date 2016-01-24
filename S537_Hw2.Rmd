@@ -32,7 +32,7 @@ The Delta-AIC between the top model (full model with all predictors) and the nul
 ```{r p3_a, echo=F, comment="", message=F, warning=F}
 full.sum <- summary(get.models(models,1)[[1]])
 library(pander)
-panderOptions("digits", 3)
+panderOptions("digits", 7)
 # pander(full.sum$coef)
 full.sum
 ```
@@ -88,6 +88,7 @@ set.seed(777)
 k5folds <- cvFolds(n=n, K=5, R=1)
 cvLm(full.lm, cost=mspe, folds=k5folds)
 ```
+The error for 5-fold cross-validation with this seed is close to the error for LOO cross-validation; in fact, it is slightly smaller, though this will not necessarily be the case depending on the value used to seed the pseudo-random number generator used to select the folds.  This is fortunate, as 5-fold cross-validation is far less computationally intensive in general (JWHT Result 5.2 only holds for least squares linear or polynomial regression).
 
 7. _Now, change the seed and re-run all the lines of code from 6 for one of the models. What is 5-fold CV and why does this estimated error change? Why does LOOCV not change if you change the seed?_
 
