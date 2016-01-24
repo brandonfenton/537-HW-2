@@ -7,6 +7,8 @@ output: html_document
 
 1. _Use the dredge function from the R package MuMIn on your "full" model (say something like fm1) to generate AICs for all possible models._
 
+We have opted to use the __golf__ dataset in the __Rlab__ package. Our "full" model consists of __score__ (of a PGA golfer from a round of 18 holes) as the response and the average __distance__ of drives from two holes in opposing directions, the __accur__ (accuracy) of the drives (percentage of times that drives were in the fairway for par 4 and par 5 holes), and the average number of __putts__ in the round for holes where the green was hit in regulation as explanatory variables.
+
 ```{r p1_a, echo=F, comment="", message=F, warning=F}
 require(Rlab)
 data(golf)
@@ -16,27 +18,34 @@ options(na.action = "na.fail")
 full.lm <- lm(score ~ distance + accur + putts, data = golf)
 models <- dredge(full.lm, rank=AIC)
 models
-
 ```
 
-2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of moe than 2 units are considered to be "large" and strong support for a model that is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
+2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of more than 2 units are considered to be "large" and strong support for a model that is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
 
-3. _Also compare support for the model with no predictors to your top model (if it isn't your top model) on AICs. In the model summary() for your top model, here is a result that parallels this comparison. Report that result and discuss whether they lead you to the same suggestions about these two models._
+In comparing all possible models - with this subset of explanatory variables (distance, accuracy, and putts) and with score as the response - with the use of Delta-AIC output, it was determined that the model containing all three predictors was the model closest to the "truth". A difference in Delta-AIC of 2 units is considered a large difference, meaning a model that has a Delta-AIC of more than 2 is a departure from the true model. Applying the __dredge()__ function on our model has resulted in Delta-AIC's (compared to the top model containing all three predictors) exceeding 55. This is strong evidence in support of our top model being closer to the truth - if not actually the true model - as compared to the other models.
+
+3. _Also compare support for the model with no predictors to your top model (if it isn't your top model) on AICs. In the model summary() for your top model, there is a result that parallels this comparison. Report that result and discuss whether they lead you to the same suggestions about these two models._
+
+The delta-AIC between the top model (full model with all predictors) and the null model (no predictors) is 208.88. This difference is more than 100 times greater in magnitude than the - generally large - difference of 2, providing very strong evidence in favor of the full model over the null model. 
 
 ```{r p3_a, echo=F, comment="", message=F, warning=F}
-
-summary(get.models(models,1)[[1]])
-
+full.sum <- summary(get.models(models,1)[[1]])
+library(pander)
+panderOptions("digits", 3)
+# pander(full.sum$coef)
+full.sum
 ```
-The F-test in the model summary is comparing the full model to the null model.  In this case the associated p-value is extremely small, implying that the full model is superior.  Similarly, the delta-AIC between the full model and the null model is 208.88; this difference is more than 100 times greater in magnitude than the difference of 2 which is generally considered to be large.
+
+In parallel, the F-test in the model summary is comparing the null model with no predictors ($H_0: y_{ijkl} = \mu + \epsilon_{ijkl}$) to the full model with all predictors ($H_1: y_{ijkl} = \mu + \tau_i + \alpha_j + \beta_k + \epsilon_{ijkl}$).  In this case the associated p-value is extremely small (p-value $\ll 0.001$) implying that the full model is superior, or closer to the truth.  
 
 4. _Now we will switch to using cross-validation for these same sorts of comparisons. Read JWHT page 175 to 181. Write R code to calculate the LOOCV error for a model with a common mean for all observations (so the model is lm(y~1,data=?)). Do not use any functions that directly calculate the LOOCV (see below). Report the R code and your estimate of CV$_{(n)}$ for this model._ 
 ```{r p4_a, echo=T, comment="", message=F, warning=F}
-n <- dim(golf)[1]
-
+n <- dim(golf)[1] # sample size
 CVn_j <- apply(as.matrix(1:n), 1, function(x) (golf$score[x] - mean(golf$score[-x]))^2)
-mean(CVn_j)
+mean.CVn_j <- mean(CVn_j) #0.6813177
 ```
+
+Using the above code, it was estimated that the LOOCV error for a model with a common mean for all observations is $\widehat{\text{CV}}_{(n)} =$ `r mean.CVn_j`. 
 
 5. _Based on JWHT result 5.2, you can also use the diagonal from the hat matrix to do LOOCV or you can mimic what you might have done in the previous questions that invlovled deleting each observation and producing the required fitted value. The $h_{ii}$'s are available in R using influence(fm1)$hat. Now write and report your own code to find the LOOCV for your top ranked, second ranked, and worst ranked models from the AIC model selection. Discuss these comparisons (note: these are on the squared units of your response variable and there are no rules of thumb for differences). Also note wheher they generally agree with the AIC results or not._
 
