@@ -74,9 +74,14 @@ cvLm(full.lm, cost=mspe, folds=k5folds)
 7. _Now, change the seed and re-run all the lines of code from 6 for one of the models. What is 5-fold CV and why does this estimated error change? Why does LOOCV not change if you change the seed?_
 
 ```{r p7_a, echo=F, comment="", message=F, warning=F}
+set.seed(pi)
+k5folds <- cvFolds(n=n, K=5, R=1)
+cvLm(full.lm, cost=mspe, folds=k5folds)
 
+LOOfolds <- cvFolds(n=n, K=n, R=1)
+cvLm(full.lm, cost=mspe, folds=LOOfolds)
 ```
-
+The elements in the 5 folds are selected randomly, and so will be different with different seed values.  With LOOCV each observation is used once as a test set for a model fit with all of the remaining observations.  So regardless of order the set of training/test sets used will be identical, making the results the same no matter what value has been used to seed the pseudo-random number generator.
 ## R Code Appendix:
 
 ```{r a1, ref.label='p1_a', eval=F}
