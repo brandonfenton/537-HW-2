@@ -20,13 +20,14 @@ models <- dredge(full.lm, rank=AIC)
 models
 ```
 
-2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of more than 2 units are considered to be "large" and strong support for a model that is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
+2. _For AICs, we usually scale the models using Delta-AIC as a difference in distance from the true model as compared to the top AIC model. Differences of more than 2 units are considered to be "large" and strong support for a model thaMedian and IQR. This is a skewed distribution (skewed left) with outliers and therefore we
+need to use measure which are robust or resistant to skew.t is 2 units closer to the truth. This is reported in the delta column in the dredge output. Use these ideas to discuss support for your top model versus others. Do not use the word "significant" in your discussion._
 
 In comparing all possible models - with this subset of explanatory variables (distance, accuracy, and putts) and with score as the response - with the use of Delta-AIC output, it was determined that the model containing all three predictors was the model closest to the "truth". A difference in Delta-AIC of 2 units is considered a large difference, meaning a model that has a Delta-AIC of more than 2 is a departure from the true model. Applying the __dredge()__ function on our model has resulted in Delta-AIC's (compared to the top model containing all three predictors) exceeding 55. This is strong evidence in support of our top model being closer to the truth - if not actually the true model - as compared to the other models.
 
 3. _Also compare support for the model with no predictors to your top model (if it isn't your top model) on AICs. In the model summary() for your top model, there is a result that parallels this comparison. Report that result and discuss whether they lead you to the same suggestions about these two models._
 
-The delta-AIC between the top model (full model with all predictors) and the null model (no predictors) is 208.88. This difference is more than 100 times greater in magnitude than the - generally large - difference of 2, providing very strong evidence in favor of the full model over the null model. 
+The Delta-AIC between the top model (full model with all predictors) and the null model (no predictors) is 208.88. This difference is more than 100 times greater in magnitude than the - generally large - difference of 2, providing very strong evidence in favor of the full model over the null model. 
 
 ```{r p3_a, echo=F, comment="", message=F, warning=F}
 full.sum <- summary(get.models(models,1)[[1]])
@@ -47,7 +48,7 @@ mean.CVn_j <- mean(CVn_j) #0.6813177
 
 Using the above code, it was estimated that the LOOCV error for a model with a common mean for all observations is $\widehat{\text{CV}}_{(n)} =$ `r mean.CVn_j`. 
 
-5. _Based on JWHT result 5.2, you can also use the diagonal from the hat matrix to do LOOCV or you can mimic what you might have done in the previous questions that involved deleting each observation and producing the required fitted value. The $h_{ii}$'s are available in R using influence(fm1)$hat. Now write and report your own code to find the LOOCV for your top ranked, second ranked, and worst ranked models from the AIC model selection. Discuss these comparisons (note: these are on the squared units of your response variable and there are no rules of thumb for differences). Also note wheher they generally agree with the AIC results or not._
+5. _Based on JWHT result 5.2, you can also use the diagonal from the hat matrix to do LOOCV or you can mimic what you might have done in the previous questions that involved deleting each observation and producing the required fitted value. The $h_{ii}$'s are available in R using influence(fm1)$hat. Now write and report your own code to find the LOOCV for your top ranked, second ranked, and worst ranked models from the AIC model selection. Discuss these comparisons (note: these are on the squared units of your response variable and there are no rules of thumb for differences). Also note whether they generally agree with the AIC results or not._
 
 ```{r p5_a, echo=T, comment="", message=F, warning=F}
 require(cvTools)
